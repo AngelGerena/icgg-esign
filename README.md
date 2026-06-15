@@ -75,3 +75,21 @@ Every change is a `git push`. Netlify rebuilds automatically. No more ZIPs.
 - AI categorization is advisory; the secretary can always override the category.
 - Signed PDFs live in the private `documents` Storage bucket at
   `{org_id}/{category}/{signer_name}/{document_id}.pdf`.
+
+## Troubleshooting
+
+### The deployed site is blank (white screen)
+This almost always means the Netlify environment variables are missing or
+misnamed. Vite only exposes variables prefixed with `VITE_`, and they must be
+present **at build time**, so changing them requires a fresh deploy.
+
+1. Netlify → Site settings → Environment variables. Confirm both exist exactly:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+2. Netlify → Deploys → Trigger deploy → **Clear cache and deploy site**
+   (a plain redeploy can reuse the old cache).
+3. Reload and open the browser console (F12). The app now prints a clear
+   `[config] Missing Supabase env vars...` message and renders an on-screen
+   notice instead of crashing to a blank page.
+
+Local dev: copy `.env.example` to `.env`, fill in the values, then `npm run dev`.
